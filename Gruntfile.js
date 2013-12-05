@@ -1,4 +1,4 @@
-var module;
+
 module.exports = function(grunt){
 	/*global module:false*/
 	grunt.initConfig({
@@ -12,7 +12,7 @@ module.exports = function(grunt){
 				newcap: true,
 				noarg: true,
 				sub: true,
-				//undef: true,
+				undef: true,
 				boss: true,
 				eqnull: true,
 				browser: true,
@@ -22,7 +22,9 @@ module.exports = function(grunt){
 					requirejs: true,
 					describe: true,
 					expect: true,
-					it: true
+					it: true,
+					module: true,
+					inventoryObject: true
 				}
 			}
 		},
