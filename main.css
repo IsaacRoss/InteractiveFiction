@@ -99,3 +99,10 @@ div.menu{
 	padding-top: 25px;
 	text-align: center;
 }
+
+img.item{
+    width:100%;
+    height:100%;
+    cursor: move;
+    padding:0px;
+}
