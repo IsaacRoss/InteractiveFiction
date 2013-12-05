@@ -3,7 +3,7 @@ module.exports = function(grunt){
 	/*global module:false*/
 	grunt.initConfig({
 		jshint: {
-			src: ['Gruntfile.js'],
+			src: ['Gruntfile.js', 'dragDrop.js', 'game.js'],
 			options:{
 				curly: true,
 				eqeqeq: true,
@@ -12,7 +12,7 @@ module.exports = function(grunt){
 				newcap: true,
 				noarg: true,
 				sub: true,
-				undef: true,
+				//undef: true,
 				boss: true,
 				eqnull: true,
 				browser: true,
