@@ -1,3 +1,4 @@
+var game;
 game.things = (function(){
   var items = {
     bat: {
@@ -64,7 +65,17 @@ game.things = (function(){
         }else{
           sourceObject = game.slide;
         }
+        sourceObject[effects.subject](itemObject);
       }
+      if(!!effects.message === true){
+        game.slide.setText(effects.message);
+      }
+      game.screen.draw();
     }
+  };
+  return{
+    items: items,
+    get: get,
+    dropItemInto: dropItemInto
   };
 })();

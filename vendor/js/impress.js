@@ -16,6 +16,14 @@
  *  source:  http://github.com/bartaz/impress.js/
  */
 
+//todo: monkey patch this
+    var game = {
+        stepsTaken: [],
+        updateAfterStep: function(stepId){
+            this.stepsTaken.push(stepId);
+        }
+    };
+
 /*jshint bitwise:true, curly:true, eqeqeq:true, forin:true, latedef:true, newcap:true,
          noarg:true, noempty:true, undef:true, strict:true, browser:true */
 
@@ -56,13 +64,7 @@
     
     })();
 
-    //todo: monkey patch this
-    var game = {
-        stepsTaken: [],
-        updateAfterStep: function(stepId){
-            this.stepsTaken.push(stepId);
-        }
-    };
+    
     
     // `arraify` takes an array-like object and turns it into real Array
     // to make all the Array.prototype goodness available.
