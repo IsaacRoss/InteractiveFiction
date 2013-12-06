@@ -1,4 +1,3 @@
-var game;
 game.things = (function(){
   var items = {
     bat: {
@@ -78,4 +77,112 @@ game.things = (function(){
     get: get,
     dropItemInto: dropItemInto
   };
+})();
+
+game.slide = (function(){
+  var inventory = {
+    slide1: 'bat',
+    slide2: 'dino',
+    slide3: null
+  };
+  var addItem = function(item){
+    inventory[game.slide.currentSlide()] = item.name;
+  };
+  var deleteItem = function(item){
+    inventory[game.slide.currentSlide()] = null;
+  };
+  var findTextNode = function(slideId){
+    return document.querySelector("#" + slideId + " .slide-text .event-text");
+  };
+  var getInventory = function(slideId){
+    return inventory[slideId];
+  };
+  /*jshint -W018 */
+  var setText = function(message, slideId){
+    if(!!slideId === false){
+      slideId = currentSlide();
+    }
+    findTextNode(slideId).innerHTML = message;
+  };
+  var currentSlide = function(){
+    return game.stepsTaken[game.stepsTaken.length -1];
+  };
+  var draw = function(slideId){
+    if(!slideId === true){
+      slideId = this.currentSlide();
+    }
+    var item = inventory[slideId];
+    var inventoryBox = document.querySelector('#' + slideId + ' .inventory-box');
+    if(item === null){
+      inventoryBox.innerHTML = "";
+      inventoryBox.classList.add("empty");
+    }else{
+      inventoryBox.innerHTML = "<img src='"+item+".png' alt='"+item+"' class='item' id='"+item+"'>";
+      inventoryBox.classList.remove("empty");
+    }
+  };
+
+  return{
+    addItem: addItem,
+    deleteItem: deleteItem,
+    setText: setText,
+    getInventory: getInventory,
+    draw: draw,
+    currentSlide: currentSlide
+  };
+})();
+
+game.playerInventory = (function(){
+  var items = {
+    bat: false
+  };
+  var clearInventory = function(){
+    var playerInventoryBoxes;
+    playerInventoryBoxes = document.querySelectorAll("#player_inventory .inventory-box");
+    [].forEach.call(playerInventoryBoxes, function(inventoryBox){
+      inventoryBox.classList.add('empty');
+      inventoryBox.innerHTML = "";
+    });
+  };
+  var addItem = function(item){
+    if(this.items[item.name] === false){
+      this.items[item.name] = true;
+    }
+    return this.items;
+  };
+  var deleteItem = function(item){
+    if(this.items[item.name] === true){
+      this.items[item.name] = false;
+    }
+    return this.items;
+  };
+  var draw = function(){
+    clearInventory();
+    var counter = 0;
+    var inventoryBoxes = document.querySelectorAll('#player_inventory .inventory-box');
+    for(var item in this.items){
+      if (this.items[item] === true){
+        inventoryBoxes[counter].classList.remove('empty');
+        inventoryBoxes[counter].innerHTML = "<img src='"+item+".png' alt='"+item+"' class='item' id='"+item+"'>";
+      }
+      counter = counter + 1;
+    }
+  };
+  return {
+    items: items,
+    addItem: addItem,
+    deleteItem: deleteItem,
+    draw: draw
+  };
+})();
+
+game.screen = (function(){
+  var draw = function(){
+    game.playerInventory.draw();
+    game.slide.draw(game.slide.currentSlide);
+  };
+  return{
+    draw: draw
+  };
+
 })();
