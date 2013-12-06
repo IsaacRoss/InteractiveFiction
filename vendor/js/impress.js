@@ -16,19 +16,17 @@
  *  source:  http://github.com/bartaz/impress.js/
  */
 
-//todo: monkey patch this
-    var game = {
-        stepsTaken: [],
-        updateAfterStep: function(stepId){
-            this.stepsTaken.push(stepId);
-        }
-    };
-
 /*jshint bitwise:true, curly:true, eqeqeq:true, forin:true, latedef:true, newcap:true,
          noarg:true, noempty:true, undef:true, strict:true, browser:true */
 
-// You are one of those who like to know how things work inside?
+// You are one of those who like to know how thing work inside?
 // Let me show you the cogs that make impress.js run...
+var game = {
+  stepsTaken: [],
+  updateAfterStep: function(stepId){
+    this.stepsTaken.push(stepId);           
+  }
+};
 (function ( document, window ) {
     'use strict';
     
@@ -63,8 +61,6 @@
         };
     
     })();
-
-    
     
     // `arraify` takes an array-like object and turns it into real Array
     // to make all the Array.prototype goodness available.
@@ -422,9 +418,9 @@
             } else if (typeof step === "string") {
                 step = byId(step);
             }
-            if(!!step.id === true){
-                game.updateAfterStep(step.Id);
-            }
+            if (!!step.id === true){
+              game.updateAfterStep(step.id); 
+            };
             return (step && step.id && stepsData["impress-" + step.id]) ? step : null;
         };
         
@@ -797,7 +793,7 @@
         // rescale presentation when window is resized
         window.addEventListener("resize", throttle(function () {
             // force going to active step again, to trigger rescaling
-            api.goto( document.querySelector(".step.active"), 500 );
+            api.goto( document.querySelector(".active"), 500 );
         }, 250), false);
         
     }, false);

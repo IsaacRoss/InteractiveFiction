@@ -95,6 +95,7 @@ game.slide = (function(){
     if (!!slideId === false){
       slideId = currentSlide();
     }
+    console.log(findTextNode(slideId).innerHTML);
     return findTextNode(slideId).innerHTML = message;
   };
   var currentSlide = function(){
