@@ -55,6 +55,14 @@
         };
     
     })();
+
+    //todo: monkey patch this
+    var game = {
+        stepsTaken: [],
+        updateAfterStep: function(stepId){
+            this.stepsTaken.push(stepId);
+        }
+    };
     
     // `arraify` takes an array-like object and turns it into real Array
     // to make all the Array.prototype goodness available.
@@ -411,6 +419,9 @@
                 step = step < 0 ? steps[ steps.length + step] : steps[ step ];
             } else if (typeof step === "string") {
                 step = byId(step);
+            }
+            if(!!step.id === true){
+                game.updateAfterStep(step.Id);
             }
             return (step && step.id && stepsData["impress-" + step.id]) ? step : null;
         };

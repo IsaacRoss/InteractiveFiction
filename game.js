@@ -1,31 +1,70 @@
-var inventoryObject = (function(){
-  var inventory = {};
-  var itemables = document.getElementsByClassName("itemable");
-  [].forEach.call(itemables, function(itemable) {
-    inventory[itemable.id] = [];
-  });
-  var items = document.getElementsByClassName("item");
-  [].forEach.call(items, function(item) {
-    var greatGrandpa = item.parentElement.parentElement.parentElement;
-    inventory[greatGrandpa.id].push(item.id);
-  });
-  var add = function(inventorySection, newItem){
-    inventory[inventorySection].push(newItem);
-    return inventory;
-  };
-  var remove = function(inventorySection, itemToDelete){
-    for (var i = 0; i < inventory[inventorySection].length; i++){
-      if (inventory[inventorySection][i] === itemToDelete){
-        inventory[inventorySection].splice(i, 1);
+game.things = (function(){
+  var items = {
+    bat: {
+      name: 'bat',
+      effects: {
+        'player_inventory': { 
+          message: "<p>You picked up the bat!</p>",
+          object: "addItem",
+          subject: "deleteItem"
+        },
+        'dino': {
+          message: "<p>You hit the dino with the bat</p><p>Now he's Angry.</p>",
+          subject: 'deleteItem'
+        },
+        'empty': {
+          message: "<p>You set the bat down over there. </p>",
+          object: "addItem",
+          subject: "deleteItem"
+        }
+      }
+    },
+    dino: {
+      name: 'dino', 
+      effects: {
+        'player_inventory': {
+          message: "<p>You can't move the dino...</p>"
+        }
       }
     }
-    return inventory;
   };
-  return {
-    get : function(){
-            return inventory;
-          },
-    add : add,
-    remove : remove
+
+  var get = function(name){
+    return this.items[name];
+  };
+  var dropItemInto = function(itemNode, target){
+    var effects,
+      targetObject,
+      sourceObject,
+      sourceContext = itemNode.parentElement.parentElement.id;
+
+    if(sourceContext !== target){
+      var item = itemNode.firstChild.id;
+      var itemObject = this.get(item);
+
+      if(target === 'player_inventory'){
+        effects = itemObject.effects[target];
+      }else if(game.slide.getInventory(target)){
+        effects = itemObject.effects[game.slide.getInventory(target)];
+      }else{
+        effects = itemObject.effects['empty'];
+      }
+      /*jshint -W018 */
+      if(!!effects.object === true){
+        if(target==='player_inventory'){
+          targetObject = game.playerInventory;
+        }else{
+          targetObject = game.slide;
+        }
+        targetObject[effects.object](itemObject);
+      }
+      if(!!effects.subject === true){
+        if(sourceContext === 'player_inventory'){
+          sourceObject = game.playerInventory;
+        }else{
+          sourceObject = game.slide;
+        }
+      }
+    }
   };
 })();
