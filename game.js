@@ -29,48 +29,50 @@ game.things = (function(){
     return this.items[name];
   };
   var dropItemInto = function(itemNode, target){
+    var effects,
+      sourceObject;
     var sourceContext = itemNode.parentElement.parentElement.id;
     if(sourceContext !== target){
       var item = itemNode.firstChild.id;
       var itemObject = this.get(item);
 
       if (target === 'player_inventory'){
-        var effects = itemObject.effects[target];
+        effects = itemObject.effects[target];
       }else if(game.slide.getInventory(target)){
-        var effects = itemObject.effects[game.slide.getInventory(target)];
+        effects = itemObject.effects[game.slide.getInventory(target)];
       }else{
-        var effects = itemObject.effects['empty'];
-      };
-
+        effects = itemObject.effects['empty'];
+      }
+      /* jshint -W018 */
       var targetObject;
       if (!!effects.object === true){
         if(target==="player_inventory"){
           targetObject = game.playerInventory;
         }else{
           targetObject = game.slide;
-        };
+        }
         targetObject[effects.object](itemObject);
-      };
+      }
       if (!!effects.subject === true){
         if(sourceContext === "player_inventory"){
-          var sourceObject = game.playerInventory;
+          sourceObject = game.playerInventory;
         }else{
-          var sourceObject = game.slide;
-        };
+          sourceObject = game.slide;
+        }
         sourceObject[effects.subject](itemObject);
-      };
+      }
       if (!!effects.message === true){
         game.slide.setText(effects.message);
-      };
+      }
       game.screen.draw();
-    };
+    }
   };
 
   return{
     items: items,
     get: get,
     dropItemInto: dropItemInto
-  }
+  };
 })();
 
 game.slide = (function(){
@@ -92,19 +94,20 @@ game.slide = (function(){
     return inventory[slideId];
   };
   var setText = function(message, slideId){
+     /* jshint -W018 */
     if (!!slideId === false){
       slideId = currentSlide();
     }
-    console.log(findTextNode(slideId).innerHTML);
     return findTextNode(slideId).innerHTML = message;
   };
   var currentSlide = function(){
     return game.stepsTaken[game.stepsTaken.length - 1];
   };
   var draw = function(slideId){
+     /* jshint -W018 */
     if(!slideId === true){
       slideId = this.currentSlide();
-    };
+    }
     var item = inventory[slideId];
     var inventoryBox = document.querySelector ('#'+slideId+' .inventory-box');
     if (item === null){
@@ -131,7 +134,7 @@ game.playerInventory = (function(){
     bat: false
   };
   var clearInventory = function(){
-    playerInventoryBoxes = document.querySelectorAll('#player_inventory .inventory-box');
+    var playerInventoryBoxes = document.querySelectorAll('#player_inventory .inventory-box');
     [].forEach.call(playerInventoryBoxes, function(inventoryBox) {
       inventoryBox.classList.add("empty");
       inventoryBox.innerHTML = "";
@@ -140,13 +143,13 @@ game.playerInventory = (function(){
   var addItem = function(item){
     if (this.items[item.name] === false){
       this.items[item.name] = true;
-    };
+    }
     return this.items;
   };
   var deleteItem = function(item){
     if (this.items[item.name] === true){
       this.items[item.name] = false;
-    };
+    }
     return this.items;
   };
   var draw = function(){
@@ -159,7 +162,7 @@ game.playerInventory = (function(){
         inventoryBoxes[counter].innerHTML = "<img src='"+item+".png' alt='"+item+"' class='item' id='"+item+"'>";
       }
       counter = counter + 1;
-    };
+    }
   };
   return {
     items: items,
@@ -176,5 +179,5 @@ game.screen = (function(){
   };
   return {
     draw: draw
-  }
+  };
 })();
