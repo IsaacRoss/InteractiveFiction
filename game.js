@@ -3,28 +3,24 @@ game.things = (function(){
     bat: {
       name: 'bat',
       effects: {
-        'player_inventory': { 
-          message: "<p>You picked up the bat!</p>",
-          object: "addItem",
-          subject: "deleteItem"
+        'player_inventory': { message: "<p>You picked up the bat!</p>",
+                            object: "addItem",
+                            subject: "deleteItem"
         },
-        'dino': {
-          message: "<p>You hit the dino with the bat</p><p>Now he's Angry.</p>",
-          subject: 'deleteItem'
+        'dino': { message: "<p>You hit the dino with the bat.</p><p>Now he's angry.</p>",
+                  subject: 'deleteItem'
         },
         'empty': {
-          message: "<p>You set the bat down over there. </p>",
-          object: "addItem",
-          subject: "deleteItem"
+              message: "<p>You set the bat down over there.</p>",
+              object: "addItem",
+              subject: "deleteItem"
         }
       }
     },
     dino: {
-      name: 'dino', 
+      name: 'dino',
       effects: {
-        'player_inventory': {
-          message: "<p>You can't move the dino...</p>"
-        }
+        'player_inventory': { message: "<p>You can't move the dino...</p>" } 
       }
     }
   };
@@ -33,50 +29,48 @@ game.things = (function(){
     return this.items[name];
   };
   var dropItemInto = function(itemNode, target){
-    var effects,
-      targetObject,
-      sourceObject,
-      sourceContext = itemNode.parentElement.parentElement.id;
-
+    var sourceContext = itemNode.parentElement.parentElement.id;
     if(sourceContext !== target){
       var item = itemNode.firstChild.id;
       var itemObject = this.get(item);
 
-      if(target === 'player_inventory'){
-        effects = itemObject.effects[target];
+      if (target === 'player_inventory'){
+        var effects = itemObject.effects[target];
       }else if(game.slide.getInventory(target)){
-        effects = itemObject.effects[game.slide.getInventory(target)];
+        var effects = itemObject.effects[game.slide.getInventory(target)];
       }else{
-        effects = itemObject.effects['empty'];
-      }
-      /*jshint -W018 */
-      if(!!effects.object === true){
-        if(target==='player_inventory'){
+        var effects = itemObject.effects['empty'];
+      };
+
+      var targetObject;
+      if (!!effects.object === true){
+        if(target==="player_inventory"){
           targetObject = game.playerInventory;
         }else{
           targetObject = game.slide;
-        }
+        };
         targetObject[effects.object](itemObject);
-      }
-      if(!!effects.subject === true){
-        if(sourceContext === 'player_inventory'){
-          sourceObject = game.playerInventory;
+      };
+      if (!!effects.subject === true){
+        if(sourceContext === "player_inventory"){
+          var sourceObject = game.playerInventory;
         }else{
-          sourceObject = game.slide;
-        }
+          var sourceObject = game.slide;
+        };
         sourceObject[effects.subject](itemObject);
-      }
-      if(!!effects.message === true){
+      };
+      if (!!effects.message === true){
         game.slide.setText(effects.message);
-      }
+      };
       game.screen.draw();
-    }
+    };
   };
+
   return{
     items: items,
     get: get,
     dropItemInto: dropItemInto
-  };
+  }
 })();
 
 game.slide = (function(){
@@ -97,32 +91,32 @@ game.slide = (function(){
   var getInventory = function(slideId){
     return inventory[slideId];
   };
-  /*jshint -W018 */
   var setText = function(message, slideId){
-    if(!!slideId === false){
+    if (!!slideId === false){
       slideId = currentSlide();
     }
-    findTextNode(slideId).innerHTML = message;
+    return findTextNode(slideId).innerHTML = message;
   };
   var currentSlide = function(){
-    return game.stepsTaken[game.stepsTaken.length -1];
+    return game.stepsTaken[game.stepsTaken.length - 1];
   };
   var draw = function(slideId){
     if(!slideId === true){
       slideId = this.currentSlide();
-    }
+    };
     var item = inventory[slideId];
-    var inventoryBox = document.querySelector('#' + slideId + ' .inventory-box');
-    if(item === null){
+    var inventoryBox = document.querySelector ('#'+slideId+' .inventory-box');
+    if (item === null){
       inventoryBox.innerHTML = "";
       inventoryBox.classList.add("empty");
-    }else{
+    }
+    else{
       inventoryBox.innerHTML = "<img src='"+item+".png' alt='"+item+"' class='item' id='"+item+"'>";
       inventoryBox.classList.remove("empty");
     }
   };
 
-  return{
+  return {
     addItem: addItem,
     deleteItem: deleteItem,
     setText: setText,
@@ -131,29 +125,27 @@ game.slide = (function(){
     currentSlide: currentSlide
   };
 })();
-
 game.playerInventory = (function(){
   var items = {
     bat: false
   };
   var clearInventory = function(){
-    var playerInventoryBoxes;
-    playerInventoryBoxes = document.querySelectorAll("#player_inventory .inventory-box");
-    [].forEach.call(playerInventoryBoxes, function(inventoryBox){
-      inventoryBox.classList.add('empty');
+    playerInventoryBoxes = document.querySelectorAll('#player_inventory .inventory-box');
+    [].forEach.call(playerInventoryBoxes, function(inventoryBox) {
+      inventoryBox.classList.add("empty");
       inventoryBox.innerHTML = "";
     });
   };
   var addItem = function(item){
-    if(this.items[item.name] === false){
+    if (this.items[item.name] === false){
       this.items[item.name] = true;
-    }
+    };
     return this.items;
   };
   var deleteItem = function(item){
-    if(this.items[item.name] === true){
+    if (this.items[item.name] === true){
       this.items[item.name] = false;
-    }
+    };
     return this.items;
   };
   var draw = function(){
@@ -161,12 +153,12 @@ game.playerInventory = (function(){
     var counter = 0;
     var inventoryBoxes = document.querySelectorAll('#player_inventory .inventory-box');
     for(var item in this.items){
-      if (this.items[item] === true){
-        inventoryBoxes[counter].classList.remove('empty');
+      if(this.items[item] === true){
+        inventoryBoxes[counter].classList.remove("empty");
         inventoryBoxes[counter].innerHTML = "<img src='"+item+".png' alt='"+item+"' class='item' id='"+item+"'>";
       }
       counter = counter + 1;
-    }
+    };
   };
   return {
     items: items,
@@ -179,10 +171,9 @@ game.playerInventory = (function(){
 game.screen = (function(){
   var draw = function(){
     game.playerInventory.draw();
-    game.slide.draw(game.slide.currentSlide);
+    game.slide.draw(game.slide.currentSlide());
   };
-  return{
+  return {
     draw: draw
-  };
-
+  }
 })();
